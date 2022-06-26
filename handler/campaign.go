@@ -124,7 +124,7 @@ func (ch *campaignHandler) UploadImage(c *gin.Context) {
 		response := helper.APIResponse("Upload image campaign failed", http.StatusUnprocessableEntity, "error", errorsMessage)
 		c.JSON(http.StatusUnprocessableEntity, response)
 		return
-	}
+	}	
 	file, err := c.FormFile("file")
 	if err != nil {
 

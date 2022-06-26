@@ -116,18 +116,18 @@ func (uh *userHandler) CheckEmailAvailability(c *gin.Context) {
 }
 
 func (uh *userHandler) UploadAvatar(c *gin.Context) {
-	file, err := c.FormFile("avatar")
-	if err != nil {
-
-		data := gin.H{"is_uploaded": false}
-		response := helper.APIResponse("Failed to upload avatar image", http.StatusBadRequest, "error", data)
-		c.JSON(http.StatusBadRequest, response)
-		return
-	}
 
 	//token jwt user
 	currentUser := c.MustGet("currentUser").(user.User)
 	userId := currentUser.ID
+	file, err := c.FormFile("avatar")
+	if err != nil {
+
+		data := gin.H{"is_uploaded": false}
+		response := helper.APIResponse("Failed to upload avatar image1", http.StatusBadRequest, "error", data)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
 	path := fmt.Sprintf("images/%d-%s", userId, file.Filename)
 
 	err = c.SaveUploadedFile(file, path)
@@ -135,7 +135,7 @@ func (uh *userHandler) UploadAvatar(c *gin.Context) {
 	if err != nil {
 
 		data := gin.H{"is_uploaded": false}
-		response := helper.APIResponse("Failed to upload avatar image", http.StatusBadRequest, "error", data)
+		response := helper.APIResponse("Failed to upload avatar image2", http.StatusBadRequest, "error", data)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -144,12 +144,20 @@ func (uh *userHandler) UploadAvatar(c *gin.Context) {
 	if err != nil {
 		fmt.Println("error 3")
 		data := gin.H{"is_uploaded": false}
-		response := helper.APIResponse("Failed to upload avatar image", http.StatusBadRequest, "error", data)
+		response := helper.APIResponse("Failed to upload avatar image3", http.StatusBadRequest, "error", data)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
 
 	data := gin.H{"is_uploaded": true}
 	response := helper.APIResponse("Avatar successfully uploaded", http.StatusOK, "success", data)
+	c.JSON(http.StatusOK, response)
+}
+
+func (uh *userHandler) FetchUser(c *gin.Context) {
+	currentUser := c.MustGet("currentUser").(user.User)
+	formatter := user.FormaterUser(currentUser, "")
+
+	response := helper.APIResponse("Succesfully fetch user data", http.StatusOK, "success", formatter)
 	c.JSON(http.StatusOK, response)
 }
